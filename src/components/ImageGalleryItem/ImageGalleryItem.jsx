@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
 import { GalleryImg, PhotoCard } from './ImageGalleryItem.styled';
 
-
-function ImageGalleryItem({ image, tags, onModal, largeImageURL,}) {
+function ImageGalleryItem({ image, tags, onModal, largeImageURL }) {
   return (
     <>
-      <PhotoCard >
-        <GalleryImg src={image} alt={tags} onClick={() => onModal(largeImageURL)} />
+      <PhotoCard>
+        <GalleryImg
+          src={image}
+          alt={tags}
+          onClick={() => onModal(largeImageURL)}
+        />
       </PhotoCard>
     </>
   );

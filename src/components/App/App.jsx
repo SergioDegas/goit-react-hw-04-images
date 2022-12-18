@@ -9,7 +9,6 @@ import Loader from 'components/Loader';
 import Modal from 'components/Modal';
 
 export const App = () => {
-
   const [query, setQuery] = useState('');
   const [modalImage, setModalImage] = useState('');
   const [page, setPage] = useState(1);
@@ -18,54 +17,52 @@ export const App = () => {
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     if (query && page > 1) {
-       fetch();
+      fetch();
     }
-   
-    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ page, query]);
 
-   const fetch = async () => {
-     try {
-       const { hits, totalHits } = await Api(query, page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, query]);
 
-       if (!totalHits) {
-         toast.error('Sorry, but nothing was found for your request');
-       }
-       if (hits) {
-         const imagesArray = hits.map(
-           ({ id, largeImageURL, tags, webformatURL }) => {
-             return {
-               id,
-               largeImageURL,
-               tags,
-               webformatURL,
-             };
-           }
-         );
+  const fetch = async () => {
+    try {
+      const { hits, totalHits } = await Api(query, page);
 
-         setItems([...imagesArray]);
-       }
-     } catch (error) {
-       toast.error('Oops! Something went wrong! Please try again.');
-     } finally {
-       setIsLoading(false);
-     }
-   };
+      if (!totalHits) {
+        toast.error('Sorry, but nothing was found for your request');
+      }
+      if (hits) {
+        const imagesArray = hits.map(
+          ({ id, largeImageURL, tags, webformatURL }) => {
+            return {
+              id,
+              largeImageURL,
+              tags,
+              webformatURL,
+            };
+          }
+        );
 
+        setItems([...imagesArray]);
+      }
+    } catch (error) {
+      toast.error('Oops! Something went wrong! Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    // useEffect(() => {
-    //   window.scrollTo({
-    //     top: document.documentElement.scrollHeight,
-    //     behavior: 'smooth',
-    //   });
-    // });
+  // useEffect(() => {
+  //   window.scrollTo({
+  //     top: document.documentElement.scrollHeight,
+  //     behavior: 'smooth',
+  //   });
+  // });
 
   const inputValue = query => {
-    setQuery( query );
+    setQuery(query);
     setPage(1);
-     setIsLoading(true);
-     setItems([]);
+    setIsLoading(true);
+    setItems([]);
     // console.log(query);
   };
 
@@ -74,10 +71,9 @@ export const App = () => {
     setIsLoading(true);
   };
 
-
   const openModal = largeImageURL => {
     setShowModal(true);
-    setModalImage(largeImageURL );
+    setModalImage(largeImageURL);
   };
 
   // console.log(items);
@@ -86,12 +82,12 @@ export const App = () => {
       <Searchbar onSubmit={inputValue} />
       {items.length > 0 && <ImageGallery items={items} onClick={openModal} />}
 
-      {items.length >11 && !isLoading && (
+      {items.length > 11 && !isLoading && (
         <Button incrementPage={incrementPage} />
       )}
       {isLoading && <Loader />}
       {showModal && (
-        <Modal onClose={()=>setShowModal(!showModal)}>
+        <Modal onClose={() => setShowModal(!showModal)}>
           <img src={modalImage} alt="largeImage" />
         </Modal>
       )}
