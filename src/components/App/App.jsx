@@ -17,12 +17,42 @@ export const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
-    if (!query&& page <= 1) {
-       return
-     }
-   fetch() 
+    if (query && page > 1) {
+       fetch();
+    }
    
-  }, [query , page]);
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ page, query]);
+
+   const fetch = async () => {
+     try {
+       const { hits, totalHits } = await Api(query, page);
+
+       if (!totalHits) {
+         toast.error('Sorry, but nothing was found for your request');
+       }
+       if (hits) {
+         const imagesArray = hits.map(
+           ({ id, largeImageURL, tags, webformatURL }) => {
+             return {
+               id,
+               largeImageURL,
+               tags,
+               webformatURL,
+             };
+           }
+         );
+
+         setItems([...imagesArray]);
+       }
+     } catch (error) {
+       toast.error('Oops! Something went wrong! Please try again.');
+     } finally {
+       setIsLoading(false);
+     }
+   };
+
 
     // useEffect(() => {
     //   window.scrollTo({
@@ -30,36 +60,6 @@ export const App = () => {
     //     behavior: 'smooth',
     //   });
     // });
-
-  const fetch = async () => {
-    try {
-     
-
-      const { hits, totalHits } = await Api(query, page);
-
-      if (!totalHits) {
-        toast.error('Sorry, but nothing was found for your request');
-      }
-   
-
-      const imagesArray = hits.map(
-        ({ id, largeImageURL, tags, webformatURL }) => {
-          return {
-            id,
-            largeImageURL,
-            tags,
-            webformatURL,
-          };
-        }
-      );
- 
-      setItems([...items, ...imagesArray]);
-    } catch (error) {
-      toast.error('Oops! Something went wrong! Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const inputValue = query => {
     setQuery( query );
