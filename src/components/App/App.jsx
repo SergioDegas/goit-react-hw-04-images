@@ -16,7 +16,7 @@ export const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
-    if (query && page > 1) {
+    if (query && page) {
       fetch();
     }
 
@@ -42,7 +42,7 @@ export const App = () => {
           }
         );
 
-        setItems([...imagesArray]);
+        setItems([...items,...imagesArray]);
       }
     } catch (error) {
       toast.error('Oops! Something went wrong! Please try again.');
