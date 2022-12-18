@@ -12,7 +12,7 @@ useEffect(() => {
   return () => {
     window.removeEventListener('keydown', handleKeyDown);
   };
-}, []);
+});
 
  
  const handleKeyDown = e => {
