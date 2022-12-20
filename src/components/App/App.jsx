@@ -17,39 +17,41 @@ export const App = () => {
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     if (query && page) {
-      fetch();
+     const fetch = async () => {
+       try {
+          setIsLoading(true);
+         const { hits, totalHits } = await Api(query, page);
+
+         if (!totalHits) {
+           toast.error('Sorry, but nothing was found for your request');
+         }
+         if (hits) {
+           const imagesArray = hits.map(
+             ({ id, largeImageURL, tags, webformatURL }) => {
+               return {
+                 id,
+                 largeImageURL,
+                 tags,
+                 webformatURL,
+               };
+             }
+           );
+
+           setItems(items=>[...items, ...imagesArray]);
+         }
+       } catch (error) {
+         toast.error('Oops! Something went wrong! Please try again.');
+       } finally {
+         setIsLoading(false);
+       }
+     };
+         fetch();
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [page, query]);
 
-  const fetch = async () => {
-    try {
-      const { hits, totalHits } = await Api(query, page);
-
-      if (!totalHits) {
-        toast.error('Sorry, but nothing was found for your request');
-      }
-      if (hits) {
-        const imagesArray = hits.map(
-          ({ id, largeImageURL, tags, webformatURL }) => {
-            return {
-              id,
-              largeImageURL,
-              tags,
-              webformatURL,
-            };
-          }
-        );
-
-        setItems([...items,...imagesArray]);
-      }
-    } catch (error) {
-      toast.error('Oops! Something went wrong! Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+ 
 
   // useEffect(() => {
   //   window.scrollTo({
@@ -61,14 +63,14 @@ export const App = () => {
   const inputValue = query => {
     setQuery(query);
     setPage(1);
-    setIsLoading(true);
+  
     setItems([]);
     // console.log(query);
   };
 
   const incrementPage = () => {
     setPage(prevPage => prevPage + 1);
-    setIsLoading(true);
+   
   };
 
   const openModal = largeImageURL => {
